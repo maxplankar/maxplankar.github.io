@@ -479,12 +479,11 @@
 
   <p id="viewtext" class="aftersignin"></p>
 
-  <h1 class="aftersignin" style="text-align: center; font-family: Quicksand; color: var(--important-text)">My Classes for Today</h1>
+  <h1 id="class4today" class="aftersignin" style="text-align: center; font-family: Quicksand; color: var(--important-text)">My Classes for Today</h1>
 
   <table id="posts" class="aftersignin"></table>
 
   <div id="addclassbuttondiv" style="text-align: center">
-
   </div>
 
   <script>
@@ -579,8 +578,9 @@
         if (this.readyState == 4 && this.status == 200) {
           var posts_array = JSON.parse(this.responseText);
           let classdata = posts_array.data;
-          let filtered = classdata.filter((obj) => obj[n] == "on");
-          filtered2 = filtered.filter((obj) => obj.Email == str);
+
+          let filtered = classdata.filter((obj) => obj.Email == str);
+          filtered2 = filtered.filter((obj) => obj[n] == "on");
 
           var listoftime = [];
           var listofdifference = [];
@@ -647,8 +647,14 @@
           datepog.setMilliseconds(datepog.getMilliseconds() + thesmall);
           var valuetimestring = moment(datepog).format("H:mm");
           const pizzatime = filtered2.filter(thetime => thetime.Time == valuetimestring);
-          if (pizzatime.length < 1) {
-            document.getElementById("viewtext").innerHTML = "All your meetings for today have finished!"
+          if (filtered.length >= 1 && filtered2.length < 1) {
+            document.getElementById("viewtext").innerHTML = "You do not have any meetings for today.";
+            document.getElementById("class4today").style.display = "none";
+          } else if (filtered2.length >= 1 && pizzatime.length < 1) {
+            document.getElementById("viewtext").innerHTML = "All your meetings have finished for today.";
+          } else if (filtered.length < 1) {
+            document.getElementById("viewtext").innerHTML = "Add a meeting to get started!";
+            document.getElementById("class4today").style.display = "none";
           } else {
             var haha = pizzatime[0].classlink;
             document.getElementById("viewtext").innerHTML = "Click button to join: " + pizzatime[0].classname;
